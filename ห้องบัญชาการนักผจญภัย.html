@@ -157,7 +157,7 @@ body:before{content:"";position:fixed;inset:0;background:linear-gradient(180deg,
 </main>
 
 <script>
-(async()=>{const p=requireAuth();if(!p)return;const st=latest||currentStudent();saveSession(st);
+(async()=>{const p=requireAuth();if(!p)return;const st=currentStudent();if(!st)return;
 const set=(id,v)=>document.getElementById(id)&&(document.getElementById(id).textContent=v); set('playerName',st.name||'นักผจญภัย');set('studentId',st.student_id||'—');set('playerClass',st.class||'—');set('level','LEVEL '+(st.level||1));set('xpText',(st.xp||0)+' XP');set('xpBig',(st.xp||0)+' XP');const pr=Math.round((Number(st.progress)||0)*100);document.getElementById('progressBar').style.width=pr+'%';document.getElementById('xpBar').style.width=pr+'%';set('progressLabel','ความก้าวหน้า '+pr+'%');set('nextLevel','ก้าวต่อไปสู่ Level '+((Number(st.level)||1)+1));const vals=[st.mission1,st.mission2,st.mission3,st.final_boss];const done=v=>entered(v);set('missionCount',vals.filter(done).length+'/4');set('badgeCount',(st.badge||'').split('|').map(x=>x.trim()).filter(Boolean).length);set('finalStatus',done(st.final_boss)?'พิชิตแล้ว':'ล็อก');['m1','m2','m3','m4'].forEach((id,i)=>{const el=document.getElementById(id);if(!el)return;const d=done(vals[i]);const u=i===0||done(vals[i-1]);el.className='status '+(d?'done':u?'doing':'locked');el.textContent=d?'✅ พิชิตแล้ว':u?'🟡 พร้อมทำภารกิจ':'🔒 ยังไม่ปลดล็อก'});const badges=(st.badge||'').toLowerCase();['จอมเวทแห่งลำดับ','อัศวินแห่งตรรกะ','ผู้พิทักษ์แห่งการวนซ้ำ','ตำนานจอมเวทโปรแกรม'].forEach((k,i)=>set('b'+(i+1),badges.includes(k.toLowerCase())?'✅ ได้รับแล้ว':'ยังไม่ได้รับ'));
 })();
 </script></body>
