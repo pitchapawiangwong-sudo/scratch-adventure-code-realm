@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Scratch Adventure — ห้องบัญชาการนักผจญภัย</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+html,body{min-height:100%;overflow-x:hidden}
+body{
+  background:#bfefff url("code-realm-login-bg.png") center/cover fixed no-repeat;
+}
+body:before{content:"";position:fixed;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(8,73,132,.10));pointer-events:none;z-index:-1}
+.shell{width:min(1180px,94vw);margin:0 auto;padding:22px 0 34px}
+.topbar{
+ display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:18px;
+}
+.brand{display:flex;align-items:center;gap:10px}
+.logo-cat{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(145deg,#ffb02e,#ff6f3d);font-size:27px;box-shadow:0 5px 0 #dc8330}
+.logo{font-size:25px;font-weight:800;line-height:1;color:#1268d7;text-shadow:0 2px #fff}
+.logo span{color:#f29c13}
+.top-actions{display:flex;gap:9px;align-items:center}
+.small-btn{border:0;border-radius:999px;padding:10px 16px;background:rgba(255,255,255,.86);color:#315b88;font-weight:800;box-shadow:0 5px 15px rgba(45,86,130,.12)}
+.hero{
+ display:grid;grid-template-columns:1.25fr .75fr;gap:18px;margin-bottom:18px;
+}
+.card{background:rgba(255,255,255,.90);border:2px solid rgba(255,255,255,.9);border-radius:28px;box-shadow:0 18px 45px rgba(34,74,125,.22);backdrop-filter:blur(12px)}
+.player-card{padding:25px;display:flex;gap:20px;align-items:center}
+.avatar{
+ width:120px;height:120px;flex:0 0 120px;border-radius:34px;display:grid;place-items:center;
+ background:linear-gradient(145deg,#dff7ff,#9bdcff);border:5px solid #fff;
+ box-shadow:0 10px 25px rgba(42,114,181,.22);font-size:66px;position:relative;
+}
+.avatar:after{content:"";position:absolute;right:-8px;bottom:-8px;width:34px;height:34px;border-radius:50%;background:#31c86b;border:5px solid white}
+.player-meta h1{margin:0 0 4px;font-size:29px;color:#173c8f}
+.player-meta .id{color:#6b82a0;font-size:14px}
+.level-row{display:flex;align-items:center;gap:10px;margin:13px 0 8px}
+.level{background:linear-gradient(135deg,#8b4de8,#5b36c9);color:#fff;border-radius:999px;padding:6px 13px;font-weight:800}
+.xp-text{font-weight:800;color:#426589}
+.progress-wrap{height:17px;background:#e7f0f8;border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 5px rgba(53,91,137,.08)}
+.progress-bar{height:100%;width:65%;background:linear-gradient(90deg,#35bdf5,#167de5,#8b4de8);border-radius:999px;transition:width .4s}
+.progress-label{font-size:13px;color:#69809e;margin-top:5px}
+.xp-card{padding:24px}
+.card-title{margin:0 0 14px;color:#173c8f;font-size:21px}
+.xp-big{font-size:40px;font-weight:800;color:#167de5;line-height:1}
+.xp-sub{color:#6b82a0;margin:6px 0 15px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.stat{padding:17px 15px;text-align:center}
+.stat .icon{font-size:25px}.stat strong{display:block;font-size:23px;color:#173c8f}.stat span{font-size:13px;color:#7187a2}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:5px 0 12px}
+.section-head h2{margin:0;color:#173c8f}
+.missions{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.mission{padding:17px;min-height:180px;display:flex;flex-direction:column}
+.mission .mission-icon{font-size:35px}
+.mission h3{margin:7px 0 2px;color:#23446e;font-size:18px}
+.mission p{margin:0 0 12px;font-size:13px;color:#7086a1;line-height:1.45;flex:1}
+.status{display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:800;width:max-content}
+.done{background:#e5faed;color:#168249}.doing{background:#fff5d9;color:#b87900}.locked{background:#eef2f7;color:#718096}
+.menu-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:14px}
+.menu-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100px;text-decoration:none;color:#315b88;padding:14px;text-align:center}
+.menu-btn .mi{font-size:29px}.menu-btn b{margin-top:5px;font-size:13px}
+.badges{display:flex;gap:10px;flex-wrap:wrap}
+.badge{
+ min-width:150px;padding:13px 15px;border-radius:18px;background:linear-gradient(145deg,#fff,#f1f8ff);
+ border:1px solid #e1edf8;box-shadow:0 7px 16px rgba(45,86,130,.08);display:flex;align-items:center;gap:10px
+}
+.badge .bi{font-size:30px}.badge small{display:block;color:#7187a2}.badge strong{color:#315b88}
+.footer{text-align:center;color:white;font-size:12px;text-shadow:0 2px 4px rgba(0,0,0,.35);margin-top:20px}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.missions{grid-template-columns:repeat(2,1fr)}.menu-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.shell{width:92vw}.topbar{align-items:flex-start}.brand .logo{font-size:19px}.player-card{padding:18px;flex-direction:column;text-align:center}.avatar{width:105px;height:105px;flex-basis:105px}.missions{grid-template-columns:1fr}.menu-grid{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:1fr 1fr 1fr}.small-btn{padding:8px 11px}.top-actions .home-label{display:none}}
+</style>
+<script src="js/api.js"></script><script src="js/auth.js"></script></head>
+<body>
+<main class="shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo-cat">🐱</div>
+      <div class="logo"><span>SCRATCH</span> ADVENTURE</div>
+    </div>
+    <div class="top-actions">
+      <button class="small-btn" onclick="go('แผนที่อาณาจักรเวทมนตร์.html')">🗺️ แผนที่</button>
+      <button class="small-btn" onclick="logout()">🚪 ออกจากระบบ</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="card player-card">
+      <div class="avatar" id="avatar">🧙‍♂️</div>
+      <div class="player-meta">
+        <h1 id="playerName">นักผจญภัย</h1>
+        <div class="id">รหัสนักเรียน: <b id="studentId">—</b> · ชั้น <b id="playerClass">—</b></div>
+        <div class="level-row">
+          <span class="level" id="level">LEVEL 1</span>
+          <span class="xp-text" id="xpText">0 XP</span>
+        </div>
+        <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="progress-label" id="progressLabel">ความก้าวหน้า 0%</div>
+      </div>
+    </div>
+    <div class="card xp-card">
+      <h2 class="card-title">✨ พลังเวทของนักผจญภัย</h2>
+      <div class="xp-big" id="xpBig">0 XP</div>
+      <div class="xp-sub">XP สะสมจากการพิชิตภารกิจ</div>
+      <div class="progress-wrap"><div class="progress-bar" id="xpBar"></div></div>
+      <div class="progress-label" id="nextLevel">ก้าวต่อไปสู่ Level 2</div>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="card stat"><div class="icon">📜</div><strong id="missionCount">0/4</strong><span>ภารกิจที่พิชิต</span></div>
+    <div class="card stat"><div class="icon">🏅</div><strong id="badgeCount">0</strong><span>ตราเกียรติยศ</span></div>
+    <div class="card stat"><div class="icon">⚔️</div><strong id="finalStatus">ล็อก</strong><span>Final Boss</span></div>
+  </section>
+
+  <div class="section-head"><h2>📜 ภารกิจปัจจุบัน</h2><span class="theme-note">Complete Mission → Earn XP → Level Up</span></div>
+  <section class="missions">
+    <article class="card mission">
+      <div class="mission-icon">⚡</div><h3>Mission 1: Sequence</h3>
+      <p>หมู่บ้านเวทลำดับ · เรียงบล็อก Scratch ให้ถูกต้อง</p>
+      <span class="status doing" id="m1">🟡 กำลังผจญภัย</span>
+    </article>
+    <article class="card mission">
+      <div class="mission-icon">🏰</div><h3>Mission 2: Selection</h3>
+      <p>ปราสาทมนตราแห่งเงื่อนไข · ใช้ if / else</p>
+      <span class="status locked" id="m2">🔒 ยังไม่ปลดล็อก</span>
+    </article>
+    <article class="card mission">
+      <div class="mission-icon">🌲</div><h3>Mission 3: Iteration</h3>
+      <p>พงไพรมนตราวนซ้ำ · ใช้ Loop / Repeat</p>
+      <span class="status locked" id="m3">🔒 ยังไม่ปลดล็อก</span>
+    </article>
+    <article class="card mission">
+      <div class="mission-icon">👾</div><h3>Final Quest</h3>
+      <p>ประตูจอมเวทโปรแกรม · รวม Sequence + Selection + Iteration</p>
+      <span class="status locked" id="m4">🔒 ยังไม่ปลดล็อก</span>
+    </article>
+  </section>
+
+  <div class="section-head" style="margin-top:22px"><h2>🏅 ตราเกียรติยศ</h2><span class="theme-note">Badge Collection</span></div>
+  <section class="badges">
+    <div class="badge"><div class="bi">⚡</div><div><strong>จอมเวทแห่งลำดับ</strong><small id="b1">ยังไม่ได้รับ</small></div></div>
+    <div class="badge"><div class="bi">🛡️</div><div><strong>อัศวินแห่งตรรกะ</strong><small id="b2">ยังไม่ได้รับ</small></div></div>
+    <div class="badge"><div class="bi">🌲</div><div><strong>ผู้พิทักษ์แห่งการวนซ้ำ</strong><small id="b3">ยังไม่ได้รับ</small></div></div>
+    <div class="badge"><div class="bi">👑</div><div><strong>ตำนานจอมเวทโปรแกรม</strong><small id="b4">ยังไม่ได้รับ</small></div></div>
+  </section>
+
+  <div class="section-head" style="margin-top:22px"><h2>🎮 เมนูหลักของเกม</h2></div>
+  <section class="menu-grid">
+    <a class="card menu-btn" href="แผนที่อาณาจักรเวทมนตร์.html"><span class="mi">🗺️</span><b>แผนที่อาณาจักรเวทมนตร์</b></a>
+    <a class="card menu-btn" href="หอประวัติจอมเวท.html"><span class="mi">🧙</span><b>หอประวัติจอมเวท</b></a>
+    <a class="card menu-btn" href="บันทึกภารกิจ.html"><span class="mi">📖</span><b>บันทึกภารกิจ</b></a>
+    <a class="card menu-btn" href="เส้นทางความก้าวหน้า.html"><span class="mi">✨</span><b>เส้นทางความก้าวหน้า</b></a>
+    <a class="card menu-btn" href="หีบสมบัติจอมเวท.html"><span class="mi">🎒</span><b>หีบสมบัติจอมเวท</b></a>
+  </section>
+
+  <div class="footer">Scratch Adventure • Code Realm • ห้องบัญชาการนักผจญภัย</div>
+</main>
+
+<script>
+(async()=>{const p=requireAuth();if(!p)return;const latest=await refreshStudent();const st=latest||currentStudent();saveSession(st);
+const set=(id,v)=>document.getElementById(id)&&(document.getElementById(id).textContent=v); set('playerName',st.name||'นักผจญภัย');set('studentId',st.student_id||'—');set('playerClass',st.class||'—');set('level','LEVEL '+(st.level||1));set('xpText',(st.xp||0)+' XP');set('xpBig',(st.xp||0)+' XP');const pr=Math.round((Number(st.progress)||0)*100);document.getElementById('progressBar').style.width=pr+'%';document.getElementById('xpBar').style.width=pr+'%';set('progressLabel','ความก้าวหน้า '+pr+'%');set('nextLevel','ก้าวต่อไปสู่ Level '+((Number(st.level)||1)+1));const vals=[st.mission1,st.mission2,st.mission3,st.final_boss];const done=v=>entered(v);set('missionCount',vals.filter(done).length+'/4');set('badgeCount',(st.badge||'').split('|').map(x=>x.trim()).filter(Boolean).length);set('finalStatus',done(st.final_boss)?'พิชิตแล้ว':'ล็อก');['m1','m2','m3','m4'].forEach((id,i)=>{const el=document.getElementById(id);if(!el)return;const d=done(vals[i]);const u=i===0||done(vals[i-1]);el.className='status '+(d?'done':u?'doing':'locked');el.textContent=d?'✅ พิชิตแล้ว':u?'🟡 พร้อมทำภารกิจ':'🔒 ยังไม่ปลดล็อก'});const badges=(st.badge||'').toLowerCase();['จอมเวทแห่งลำดับ','อัศวินแห่งตรรกะ','ผู้พิทักษ์แห่งการวนซ้ำ','ตำนานจอมเวทโปรแกรม'].forEach((k,i)=>set('b'+(i+1),badges.includes(k.toLowerCase())?'✅ ได้รับแล้ว':'ยังไม่ได้รับ'));
+})();
+</script></body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Scratch Adventure — Code Realm</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+html,body{min-height:100%;overflow-x:hidden}
+body{
+  background:#bfefff url("code-realm-login-bg.png") center/cover fixed no-repeat;
+}
+.page{
+  min-height:100vh;
+  display:flex;align-items:flex-start;justify-content:center;
+  padding:210px 30px 70px;
+  position:relative;
+}
+.page:before{
+  content:"";position:fixed;inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(8,73,132,.10));
+  pointer-events:none;
+}
+/* ปิดแผง Login ที่ฝังอยู่ในภาพพื้นหลัง เพื่อไม่ให้เห็น Login ซ้อน 2 ชั้น */
+.page:after{
+  content:"";
+  position:absolute;
+  z-index:0;
+  width:min(620px,64vw);
+  height:min(470px,52vh);
+  left:50%;top:52%;
+  transform:translate(-50%,-50%);
+  border-radius:34px;
+  background:rgba(226,247,255,.98);
+  box-shadow:0 22px 55px rgba(28,72,120,.20);
+  pointer-events:none;
+}
+.login-card{
+  width:min(500px,94vw);
+  position:relative;z-index:1;
+  padding:34px 38px 30px;
+  background:rgba(255,255,255,.96);
+  border:3px solid rgba(255,255,255,.98);
+  border-radius:30px;
+  box-shadow:0 25px 70px rgba(28,72,120,.30),0 5px 0 rgba(35,117,184,.12);
+}
+.logo-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:3px}
+.logo-cat{width:45px;height:45px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(145deg,#ffb02e,#ff6f3d);font-size:27px;box-shadow:0 5px 0 #dc8330}
+.logo{font-size:28px;font-weight:800;line-height:1;color:#1268d7;text-shadow:0 2px 0 #fff}
+.logo span{color:#f29c13}
+.subtitle{text-align:center;margin:12px 0 24px;color:#56708f;font-size:16px}
+label{display:block;font-weight:700;margin:0 0 7px 12px;color:#23446e}
+.field{margin-bottom:16px}
+.pass-wrap{position:relative}
+.pass-wrap .game-input{padding-right:65px}
+.show{position:absolute;right:9px;top:8px;height:38px;border:0;border-radius:999px;padding:0 13px;color:#37618c;background:#eaf5ff;font-weight:700}
+.login-btn{width:100%;font-size:18px;margin-top:5px}
+.hint{margin-top:18px;padding:13px 16px;border-radius:16px;background:#f0f8ff;border:1px solid #dceefe;color:#59718e;font-size:13px;line-height:1.55;text-align:center}
+.hint b{color:#24578e}
+.top-badges{position:fixed;z-index:2;top:18px;left:18px;display:flex;gap:8px;flex-wrap:wrap}
+.footer{position:fixed;z-index:2;bottom:12px;left:0;right:0;text-align:center;color:white;font-size:12px;text-shadow:0 2px 4px rgba(0,0,0,.35)}
+.message{min-height:22px;text-align:center;margin-top:10px;color:#e34d62;font-weight:600;font-size:14px}
+@media(max-width:650px){
+  body{background-position:center}
+  .page{padding:145px 18px 55px}
+  .login-card{padding:26px 22px 23px}
+  .logo{font-size:23px}
+  .logo-cat{width:40px;height:40px;font-size:23px}
+  .top-badges{display:none}
+}
+</style>
+</head>
+<body>
+<div class="top-badges">
+  <span class="badge-pill">⭐ Level Up</span>
+  <span class="badge-pill">🏅 Collect Badge</span>
+  <span class="badge-pill">🎮 Complete Mission</span>
+</div>
+
+<main class="page">
+  <section class="login-card">
+    <div class="logo-row">
+      <div class="logo-cat">🐱</div>
+      <div class="logo"><span>SCRATCH</span> ADVENTURE</div>
+    </div>
+    <div class="subtitle"><b>CODE REALM</b> · เข้าสู่โลกแห่งการเขียนโปรแกรม</div>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="studentId">👤 รหัสนักเรียน</label>
+        <input class="game-input" id="studentId" type="text" inputmode="numeric" autocomplete="username" placeholder="กรอกรหัสนักเรียน" required>
+      </div>
+      <div class="field">
+        <label for="password">🔐 รหัสผ่าน</label>
+        <div class="pass-wrap">
+          <input class="game-input" id="password" type="password" autocomplete="current-password" placeholder="กรอกรหัสผ่าน" required>
+          <button class="show" type="button" id="showBtn">แสดง</button>
+        </div>
+      </div>
+      <button class="game-btn login-btn" type="submit">▶️ &nbsp;เข้าสู่ Code Realm</button>
+      <div class="message" id="message"></div>
+    </form>
+
+    <div class="hint">🎮 <b>1 รหัสนักเรียน = 1 ตัวละคร = 1 การผจญภัย</b><br>Username ใช้ <b>student_id</b> และ Password ใช้รหัสผ่านที่ครูกำหนด</div>
+  </section>
+</main>
+
+<div class="footer">Scratch Adventure • ป.6/1 • Code Realm</div>
+<script src="js/api.js"></script><script src="js/auth.js"></script><script>
+const pass=document.getElementById('password');
+const show=document.getElementById('showBtn');
+show.addEventListener('click',()=>{const hidden=pass.type==='password';pass.type=hidden?'text':'password';show.textContent=hidden?'ซ่อน':'แสดง';});
+document.getElementById('loginForm').addEventListener('submit',async (e)=>{e.preventDefault();const id=document.getElementById('studentId').value.trim();const pw=pass.value.trim();const msg=document.getElementById('message');if(!id||!pw){msg.textContent='กรุณากรอกรหัสนักเรียนและรหัสผ่าน';return;}msg.textContent='กำลังเข้าสู่ Code Realm…'; try{const r=await apiPost({action:'login',student_id:id,password:pw}); if(!r.success){msg.textContent=r.message||'เข้าสู่ระบบไม่สำเร็จ';return} saveSession(r.student); location.href='ห้องบัญชาการนักผจญภัย.html';}catch(err){msg.textContent='เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่';}});
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Scratch Adventure — แผนที่อาณาจักรเวทมนตร์</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+html,body{min-height:100%;overflow-x:hidden}
+body{background:#bfefff url("map-bg.png") center/cover fixed no-repeat}
+body:before{content:"";position:fixed;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(8,73,132,.18));pointer-events:none;z-index:-1}
+.shell{width:min(1220px,94vw);margin:0 auto;padding:20px 0 32px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:15px}
+.brand{display:flex;align-items:center;gap:10px}.logo-cat{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(145deg,#ffb02e,#ff6f3d);font-size:27px;box-shadow:0 5px 0 #dc8330}.logo{font-size:25px;font-weight:800;line-height:1;color:#1268d7;text-shadow:0 2px #fff}.logo span{color:#f29c13}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.small-btn{border:0;border-radius:999px;padding:10px 16px;background:rgba(255,255,255,.9);color:#315b88;font-weight:800;box-shadow:0 5px 15px rgba(45,86,130,.13);cursor:pointer}
+.hero{background:rgba(255,255,255,.90);border:2px solid rgba(255,255,255,.95);border-radius:28px;box-shadow:0 18px 45px rgba(34,74,125,.22);backdrop-filter:blur(10px);padding:20px 24px;margin-bottom:16px;text-align:center}.hero h1{margin:0;color:#173c8f;font-size:30px}.hero p{margin:5px 0 0;color:#64809f}.player-chip{display:inline-flex;margin-top:10px;align-items:center;gap:8px;padding:7px 13px;border-radius:999px;background:#eef8ff;color:#315b88;font-weight:700}
+
+/* ===== Map Road / Timeline ===== */
+.map-wrap{position:relative;min-height:650px;border-radius:32px;overflow:hidden;padding:18px;background:rgba(224,247,255,.18);border:2px solid rgba(255,255,255,.55);box-shadow:0 20px 55px rgba(34,74,125,.22)}
+.map-wrap:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.18),transparent 48%);pointer-events:none}
+.road{position:absolute;z-index:1;left:9%;right:9%;top:50%;height:250px;transform:translateY(-50%) rotate(-4deg);border-radius:50%;border:24px solid rgba(245,188,92,.92);box-shadow:0 0 0 7px rgba(255,255,255,.45),0 12px 22px rgba(94,68,35,.18);background:transparent;clip-path:polygon(0 45%,100% 0,100% 100%,0 55%)}
+.road:after{content:"";position:absolute;left:0;right:0;top:50%;border-top:5px dashed rgba(255,255,255,.8);transform:translateY(-50%)}
+.road-glow{position:absolute;z-index:0;left:7%;right:7%;top:50%;height:275px;transform:translateY(-50%) rotate(-4deg);border-radius:50%;border:3px solid rgba(255,255,255,.35)}
+.timeline{position:relative;z-index:3;min-height:610px}
+.stop{position:absolute;width:205px;text-decoration:none;color:#23446e;text-align:center;transition:transform .2s ease;z-index:4}
+.stop:hover{transform:translateY(-8px) scale(1.03)}
+.stop .marker{width:88px;height:88px;margin:0 auto;border-radius:50%;display:grid;place-items:center;font-size:45px;border:6px solid #fff;box-shadow:0 10px 22px rgba(38,77,120,.3),0 0 0 5px rgba(255,255,255,.35);position:relative}
+.stop .marker:after{content:"";position:absolute;inset:9px;border:2px dashed rgba(255,255,255,.7);border-radius:50%}
+.stop h2{margin:8px 0 2px;font-size:18px;color:#fff;text-shadow:0 2px 5px rgba(0,0,0,.6);line-height:1.15}
+.stop p{margin:0;color:#fff;font-size:11px;font-weight:700;text-shadow:0 2px 4px rgba(0,0,0,.65);line-height:1.35}
+.stop .tag{display:inline-block;margin-top:7px;padding:5px 9px;border-radius:999px;font-size:10px;font-weight:900;background:rgba(255,255,255,.92);box-shadow:0 5px 12px rgba(38,77,120,.16)}
+.s1{left:2%;top:6%}.s2{left:25%;top:35%}.s3{right:24%;top:7%}.s4{right:2%;top:41%}.s5{left:39%;bottom:1%}
+.s1 .marker{background:linear-gradient(145deg,#ffbe35,#ff7a25)}.s1 .tag{color:#b87900}
+.s2 .marker{background:linear-gradient(145deg,#48a7ff,#2666dc)}.s2 .tag{color:#176bc7}
+.s3 .marker{background:linear-gradient(145deg,#43d88a,#168249)}.s3 .tag{color:#168249}
+.s4 .marker{background:linear-gradient(145deg,#a66bff,#6130bd)}.s4 .tag{color:#7440c5}
+.s5 .marker{background:linear-gradient(145deg,#ff6b8e,#c42c62)}.s5 .tag{color:#c42c62}
+
+.center{position:absolute;z-index:5;left:50%;top:48%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}.portal{width:125px;height:125px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#fff 0 18%,#7fe5ff 19% 35%,#8b4de8 36% 58%,#173c8f 59% 100%);border:8px solid white;box-shadow:0 0 0 8px rgba(255,255,255,.35),0 20px 40px rgba(45,86,130,.3);font-size:48px}.center h2{margin:8px 0 0;color:#173c8f;text-shadow:0 2px #fff;font-size:22px}.center small{color:#fff;font-weight:800;text-shadow:0 2px 4px rgba(0,0,0,.5)}
+.legend{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}.legend span{background:rgba(255,255,255,.9);padding:7px 11px;border-radius:999px;font-size:12px;font-weight:700;color:#4c6888;box-shadow:0 5px 15px rgba(45,86,130,.1)}
+.footer{text-align:center;color:white;font-size:12px;text-shadow:0 2px 4px rgba(0,0,0,.35);margin-top:14px}
+@media(max-width:850px){.map-wrap{min-height:820px}.road{left:12%;right:12%;top:50%;height:500px;transform:translateY(-50%) rotate(12deg);clip-path:none;border-radius:48%}.road:after{top:0;bottom:0;left:50%;right:auto;height:100%;border-top:0;border-left:5px dashed rgba(255,255,255,.8);transform:none}.road-glow{left:10%;right:10%;height:520px;transform:translateY(-50%) rotate(12deg)}.timeline{min-height:780px}.stop{width:180px}.s1{left:1%;top:4%}.s2{right:1%;left:auto;top:25%}.s3{left:1%;right:auto;top:45%}.s4{right:1%;top:64%}.s5{left:50%;bottom:1%;transform:translateX(-50%)}.s5:hover{transform:translateX(-50%) translateY(-8px) scale(1.03)}.center{top:51%}}
+@media(max-width:600px){.shell{width:92vw}.topbar{align-items:flex-start}.logo{font-size:19px}.map-wrap{min-height:930px;padding:10px}.stop{width:145px}.stop .marker{width:70px;height:70px;font-size:35px;border-width:5px}.stop h2{font-size:15px}.stop p{font-size:10px}.stop .tag{font-size:9px}.timeline{min-height:900px}.s1{left:0;top:3%}.s2{right:0;top:23%}.s3{left:0;top:43%}.s4{right:0;top:63%}.s5{bottom:1%}.center{top:51%}.portal{width:105px;height:105px;font-size:40px}.center h2{font-size:18px}}
+ .locked-stop{filter:grayscale(.75);opacity:.62;cursor:not-allowed}
+</style>
+<script src="js/api.js"></script><script src="js/auth.js"></script></head>
+<body>
+<main class="shell">
+<header class="topbar">
+  <div class="brand"><div class="logo-cat">🐱</div><div class="logo"><span>SCRATCH</span> ADVENTURE</div></div>
+  <div class="actions"><button class="small-btn" onclick="location.href='ห้องบัญชาการนักผจญภัย.html'">🏠 ห้องบัญชาการ</button><button class="small-btn" onclick="location.href='login.html'">🚪 ออกจากระบบ</button></div>
+</header>
+<section class="hero">
+  <h1>🗺️ แผนที่อาณาจักรเวทมนตร์</h1>
+  <p>เดินทางตามเส้นทางแห่งการผจญภัย ปลดล็อกพลังแห่งการเขียนโปรแกรมทีละด่าน</p>
+  <div class="player-chip">🧙‍♂️ <span id="playerName">นักผจญภัย</span> · <span id="playerLevel">Level 1</span> · ⭐ <span id="playerXP">0 XP</span></div>
+</section>
+<section class="map-wrap">
+  <div class="road-glow"></div><div class="road"></div>
+  <div class="timeline">
+    <a class="stop s1" href="ภารกิจมนตรา_Mission1_Sequence.html"><div class="marker">⚡</div><h2>หมู่บ้านเวทลำดับ</h2><p>Mission 1 · Sequence<br>เรียงลำดับคำสั่ง Scratch</p><span class="tag">XP +100 · Badge ⚡</span></a>
+    <a class="stop s2" href="ภารกิจมนตรา_Mission2_Selection.html" data-mission="mission2"><div class="marker">🏰</div><h2>ปราสาทมนตราแห่งเงื่อนไข</h2><p>Mission 2 · Selection<br>ฝึกคิดด้วย if / else</p><span class="tag">XP +150 · Badge 🛡️</span></a>
+    <a class="stop s3" href="ภารกิจมนตรา_Mission3_Iteration.html" data-mission="mission3"><div class="marker">🌲</div><h2>พงไพรมนตราวนซ้ำ</h2><p>Mission 3 · Iteration<br>พิชิต Loop / Repeat</p><span class="tag">XP +150 · Badge 🌲</span></a>
+    <a class="stop s4" href="บททดสอบจอมเวท.html" data-mission="final_boss"><div class="marker">👾</div><h2>ประตูจอมเวทโปรแกรม</h2><p>Final Quest / Final Boss<br>รวม 3 ทักษะ</p><span class="tag">XP +200 · Badge 👑</span></a>
+    <a class="stop s5" href="หอเกียรติยศจอมเวท.html"><div class="marker">🏆</div><h2>หอเกียรติยศจอมเวท</h2><p>Hall of Legends<br>ชมความสำเร็จของเหล่าจอมเวท</p><span class="tag">ดูตำนานนักผจญภัย</span></a>
+  </div>
+  <div class="center"><div class="portal">🪄</div><h2>CODE REALM</h2><small>ศูนย์กลางอาณาจักรเวทมนตร์</small></div>
+</section>
+<div class="legend"><span>⚡ Sequence</span><span>🏰 Selection</span><span>🌲 Iteration</span><span>👾 Final Boss</span><span>🏆 Hall of Legends</span></div>
+<div class="footer">Scratch Adventure • Code Realm • แผนที่อาณาจักรเวทมนตร์</div>
+</main>
+<script>
+(async()=>{const p=requireAuth();if(!p)return;const latest=await refreshStudent();const st=latest||currentStudent();saveSession(st);document.getElementById('playerName').textContent=st.name||'นักผจญภัย';document.getElementById('playerLevel').textContent='Level '+(st.level||1);document.getElementById('playerXP').textContent=(st.xp||0)+' XP';const req={mission2:'mission1',mission3:'mission2',final_boss:'mission3'};document.querySelectorAll('[data-mission]').forEach(a=>{const f=a.dataset.mission;if(req[f]&&!entered(st[req[f]])){a.classList.add('locked-stop');a.addEventListener('click',e=>{e.preventDefault();alert('🔒 ภารกิจนี้ยังไม่ปลดล็อก กรุณาพิชิตภารกิจก่อนหน้าในลำดับของ Code Realm');});}});})();
+</script></body>
+</html>
