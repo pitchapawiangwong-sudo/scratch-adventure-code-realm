@@ -1,3 +1,3 @@
-const API_URL='https://script.google.com/macros/s/AKfycbzfeJeEGgVcZJM3wnLlssuGwUuc7dw1Z6a4Aj29yujSez6EOYik8ZUPZi7xvOP_9wfu2Q/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbxYnd7k0JLgSS5Oycg_O6kVqvuS8cKsN9Pgd8MnVBbD_1Az8EMZW12hATbgt8n0k2cl/exec';
 async function apiPost(payload){const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});return await r.json();}
 async function refreshStudent(){const s=sessionStorage.getItem('codeRealmStudent');if(!s) return null;const p=JSON.parse(s);const r=await apiPost({action:'getStudent',student_id:p.student_id});if(r.success&&r.student) sessionStorage.setItem('codeRealmStudent',JSON.stringify(r.student));return r.success?r.student:null;}
