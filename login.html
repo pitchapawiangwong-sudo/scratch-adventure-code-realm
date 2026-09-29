@@ -110,7 +110,7 @@ label{display:block;font-weight:700;margin:0 0 7px 12px;color:#23446e}
 const pass=document.getElementById('password');
 const show=document.getElementById('showBtn');
 show.addEventListener('click',()=>{const hidden=pass.type==='password';pass.type=hidden?'text':'password';show.textContent=hidden?'ซ่อน':'แสดง';});
-document.getElementById('loginForm').addEventListener('submit',async (e)=>{e.preventDefault();const id=document.getElementById('studentId').value.trim();const pw=pass.value.trim();const msg=document.getElementById('message');if(!id||!pw){msg.textContent='กรุณากรอกรหัสนักเรียนและรหัสผ่าน';return;}msg.textContent='กำลังเข้าสู่ Code Realm…'; try{const r=await apiPost({action:'login',student_id:id,password:pw}); if(!(r.success===true || r.ok===true)){msg.textContent=r.message||r.error||'เข้าสู่ระบบไม่สำเร็จ';return} saveSession(r.student||r.player); location.href='ห้องบัญชาการนักผจญภัย.html';}catch(err){msg.textContent='เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่';}});
+document.getElementById('loginForm').addEventListener('submit',async (e)=>{e.preventDefault();const id=document.getElementById('studentId').value.trim();const pw=pass.value.trim();const msg=document.getElementById('message');if(!id||!pw){msg.textContent='กรุณากรอกรหัสนักเรียนและรหัสผ่าน';return;}msg.textContent='กำลังเข้าสู่ Code Realm…'; try{const r=await apiPost({action:'login',student_id:id,password:pw}); if(!r || !(r.success===true || r.ok===true) || !(r.student||r.player)){msg.textContent=r?.message||r?.error||'เข้าสู่ระบบไม่สำเร็จ';return} saveSession(r.student||r.player); location.href='ห้องบัญชาการนักผจญภัย.html';}catch(err){msg.textContent='เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่';}});
 </script>
 </body>
 </html>
